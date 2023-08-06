@@ -70,14 +70,26 @@ async def get_model(model_name: ModelName):
     
 # リクエストボディ
 
-@app.post("/items/")
-async def create_item(item: Item):
-    item_dict = item.dict()
-    if item.tax:
-        price_with_tax = item.price + item.tax
-        item_dict.update({"price_with_tax": price_with_tax})
-    return item_dict
+# @app.post("/items/")
+# async def create_item(item: Item):
+#     item_dict = item.dict()
+#     if item.tax:
+#         price_with_tax = item.price + item.tax
+#         item_dict.update({"price_with_tax": price_with_tax})
+#     return item_dict
+
+# クエリパラメータと文字列の検証
+@app.get("/items/")
+async def read_items(q: Union[str, None] = None):
+    results = {"items": [{"item_id": "Foo"},{"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
+
 
 # デバック用途
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    
